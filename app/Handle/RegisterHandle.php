@@ -15,7 +15,7 @@ class RegisterHandle
     {
     }
 
-    public function __invoke(RegisterCommand $registerCommand)
+    public function __invoke(RegisterCommand $registerCommand): array
     {
         $validator = Validator::make([
             'name'     => $registerCommand->name,
@@ -28,10 +28,6 @@ class RegisterHandle
         ]);
 
         if ($validator->fails()) {
-//            return [
-//                'Переданы не валидные данные',
-//                $validator->errors(),
-//            ];
             throw new ValidationException($validator);
         }
 
@@ -45,6 +41,12 @@ class RegisterHandle
             throw new \RuntimeException('Ошибка при создании пользователя');
         }
 
-        return $createUser;
+        $tokenResult = $createUser->createToken('auth_token');
+        $plainToken = $tokenResult->plainTextToken;
+
+        return [
+            'user'  => $createUser,
+            'token' => $plainToken,
+        ];
     }
 }

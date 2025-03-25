@@ -35,7 +35,7 @@ class LoginHandle
         }
 
         $user = Auth::getUser();
-        $tokenResult = $user->createToken('auth_token');
+        $tokenResult = $user->createToken($user);
         $plainToken = $tokenResult->plainTextToken;
 
         return [

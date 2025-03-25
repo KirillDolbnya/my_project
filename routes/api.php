@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -24,4 +25,12 @@ Route::prefix('/v1')->group(function (){
         Route::post('/register','register');
         Route::post('/login','login');
     });
+
+    Route::controller(TaskController::class)->group(function (){
+        Route::get('/','getAll');
+        Route::get('/{id}','getById');
+        Route::post('/create','create');
+        Route::patch('/update/{id}','update');
+        Route::delete('/delete/{id}','delete');
+    })->middleware('auth:sanctum');
 });

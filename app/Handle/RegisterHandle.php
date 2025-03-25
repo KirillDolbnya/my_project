@@ -37,11 +37,11 @@ class RegisterHandle
            'password' => Hash::make($registerCommand->password),
         ]);
 
-        if (! $createUser) {
+        if (!$createUser) {
             throw new \RuntimeException('Ошибка при создании пользователя');
         }
 
-        $tokenResult = $createUser->createToken('auth_token');
+        $tokenResult = $createUser->createToken($createUser);
         $plainToken = $tokenResult->plainTextToken;
 
         return [

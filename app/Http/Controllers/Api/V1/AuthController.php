@@ -6,6 +6,7 @@ use App\Command\RegisterCommand;
 use App\Handle\RegisterHandle;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -16,10 +17,27 @@ class AuthController extends Controller
 
     public function register(Request $request, RegisterHandle $registerHandle)
     {
-        $command = RegisterCommand::make($request->all());
-        $request = $registerHandle($command);
+        try {
+            $command = RegisterCommand::make($request->all());
+            $result = $registerHandle($command);
 
-        print_r($request);
+
+             return response()->json([
+                'message' => 'Пользователь успешно создан',
+                'user' => $result,
+            ], 201);
+        }catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Ошибка валидации',
+                'errors'  => $e->errors(),
+            ], 422);
+
+        } catch (\RuntimeException $e){
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
     }
 
     public function login(Request $request)

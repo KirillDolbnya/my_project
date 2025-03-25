@@ -3,11 +3,18 @@
 namespace App\Handle;
 
 use App\Command\RegisterCommand;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class RegisterHandle
 {
+
+    public function __construct(User $user)
+    {
+    }
+
     public function __invoke(RegisterCommand $registerCommand)
     {
         $validator = Validator::make([
@@ -21,9 +28,23 @@ class RegisterHandle
         ]);
 
         if ($validator->fails()) {
+//            return [
+//                'Переданы не валидные данные',
+//                $validator->errors(),
+//            ];
             throw new ValidationException($validator);
         }
 
-        return $validator;
+        $createUser = User::create([
+           'name' => $registerCommand->name,
+           'email' => $registerCommand->email,
+           'password' => Hash::make($registerCommand->password),
+        ]);
+
+        if (! $createUser) {
+            throw new \RuntimeException('Ошибка при создании пользователя');
+        }
+
+        return $createUser;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Handle;
 
 use App\Command\CreateTaskCommand;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -11,11 +12,9 @@ class CreateTaskHandle{
     public function __invoke(CreateTaskCommand $createTaskCommand)
     {
         $validator = Validator::make([
-            'user_id' => $createTaskCommand->user_id,
             'name' => $createTaskCommand->name,
             'description' => $createTaskCommand->description,
         ], [
-            'user_id' => 'required|exists:users,id',
             'name' => 'required|string',
             'description' => 'nullable|string'
         ]);
@@ -29,7 +28,7 @@ class CreateTaskHandle{
             'description' => $createTaskCommand->description
         ];
 
-        $user = User::findOrFail($createTaskCommand->user_id);
+        $user = Auth::user();
 
         $task = $user->tasks()->create($credentials);
 

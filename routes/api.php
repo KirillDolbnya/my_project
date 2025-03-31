@@ -26,11 +26,15 @@ Route::prefix('/v1')->group(function (){
         Route::post('/login','login');
     });
 
-    Route::controller(TaskController::class)->group(function (){
-        Route::get('/','getAll');
-        Route::get('/{id}','getById');
-        Route::post('/create','create');
-        Route::patch('/update/{id}','update');
-        Route::delete('/delete/{id}','delete');
-    })->middleware('auth:sanctum');
+    Route::middleware("auth:sanctum")->group(function (){
+        Route::prefix('/task')->group(function (){
+            Route::controller(TaskController::class)->group(function (){
+                Route::get('/','getAll');
+                Route::get('/{id}','getById');
+                Route::post('/create','create');
+                Route::patch('/update/{id}','update');
+                Route::delete('/delete/{id}','delete');
+            });
+        });
+    });
 });

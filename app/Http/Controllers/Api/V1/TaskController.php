@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Command\CreateTaskCommand;
 use App\Command\UpdateTaskCommand;
 use App\Handle\CreateTaskHandle;
+use App\Handle\DeleteTaskHandle;
 use App\Handle\TaskGetAllHandle;
 use App\Handle\TaskGetByIdHandle;
 use App\Handle\UpdateTaskHandle;
@@ -30,9 +31,11 @@ class TaskController extends Controller
         return new TaskResource($result);
     }
 
-    public function delete($id, )
+    public function delete($id , DeleteTaskHandle $deleteTaskHandle)
     {
+        $result = $deleteTaskHandle($id);
 
+        return new TaskResource($result);
     }
 
     public function getAll(TaskGetAllHandle $taskGetAllHandle)

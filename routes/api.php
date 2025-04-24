@@ -37,7 +37,6 @@ Route::prefix('/v1')->group(function (){
                 Route::delete('/delete/{id}','delete');
             });
         });
-
         Route::prefix('/category')->group(function (){
             Route::controller(CategoryController::class)->group(function (){
                 Route::get('/','getAll');

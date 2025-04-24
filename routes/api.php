@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,15 @@ Route::prefix('/v1')->group(function (){
     Route::middleware("auth:sanctum")->group(function (){
         Route::prefix('/task')->group(function (){
             Route::controller(TaskController::class)->group(function (){
+                Route::get('/','getAll');
+                Route::get('/{id}','getById');
+                Route::post('/create','create');
+                Route::patch('/update/{id}','update');
+                Route::delete('/delete/{id}','delete');
+            });
+        });
+        Route::prefix('/category')->group(function (){
+            Route::controller(CategoryController::class)->group(function (){
                 Route::get('/','getAll');
                 Route::get('/{id}','getById');
                 Route::post('/create','create');
